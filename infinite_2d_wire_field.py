@@ -2,9 +2,10 @@ import numpy as np
 import math
 import cmath
 import png
+from multiprocessing import Pool
 
-xsize = 480
-ysize = 640
+xsize = 100
+ysize = 200
 
 mu0 = 1.0
 
@@ -60,7 +61,7 @@ def field_profile_and_save(x2_position, filename):
 
   points = points_in_sphere(3.5)
   for p in points:
-    add_current(Bx,By,96+p[0],96+p[1],1.0/len(points))
+    add_current(Bx,By,25+p[0],25+p[1],1.0/len(points))
 
   points = points_in_sphere(3.5)
   for p in points:
@@ -74,6 +75,19 @@ def field_profile_and_save(x2_position, filename):
 
   png.from_array(a, mode='RGB').save(filename)
 
-num_files=100
-for i in range(num_files):
-  field_profile_and_save(96+((i/2.0)**1.5+8), '{0:05d}.png'.format(num_files-i-1))
+num_files=40
+#for i in range(num_files):
+ # field_profile_and_save(25+((i/2.0)**1.5+8), '{0:05d}.png'.format(num_files-i-1))
+
+
+#making changes for multiprocessing
+filename = []
+x2_position = []
+
+x2_position = [25+((i/2.0)**1.5+8) for i in range(num_files)]
+filename = ['{0:05d}.png'.format(num_files-i-1) for i in range(num_files)]
+
+pool = Pool()
+pool.map(field_profile_and_save, x2_position, filename)
+pool.close()
+pool.join()
