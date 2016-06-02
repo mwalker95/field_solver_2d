@@ -72,10 +72,13 @@ def field_profile_and_save(x2_position, filename):
   for i in range(xsize):
     for j in range(ysize):
       a[i,j] = field_to_log_color(1.0, -80, 255, math.sqrt(Bx[i,j]**2 + By[i,j]**2))
+  f= open(filename, 'w+')
+  png.from_array(a, mode='RGB').save(f)
+  return f
 
-  png.from_array(a, mode='RGB').save(filename)
 
-num_files=40
+
+num_files=10
 #for i in range(num_files):
  # field_profile_and_save(25+((i/2.0)**1.5+8), '{0:05d}.png'.format(num_files-i-1))
 
@@ -84,8 +87,11 @@ num_files=40
 filename = []
 x2_position = []
 
-x2_position = [25+((i/2.0)**1.5+8) for i in range(num_files)]
+x2_position = [6+((i/2.0)**1.5+8) for i in range(num_files)]
 filename = ['{0:05d}.png'.format(num_files-i-1) for i in range(num_files)]
+
+print map(field_profile_and_save, x2_position, filename)
+
 
 pool = Pool()
 pool.map(field_profile_and_save, x2_position, filename)
